@@ -1,10 +1,37 @@
+const AWS = require('aws-sdk');
 const express = require('express')
 const app = express();
+
+
+//const AWS_ACCESS_KEY_ID = ""
+//const AWS_SECRET_ACCESS_KEY = ""
+AWS.config.update({
+  region: "us-east-1",
+  //accessKeyId: AWS_ACCESS_KEY_ID,
+  //secretAccessKey: AWS_SECRET_ACCESS_KEY,
+})
 
 
 const labelLog = {};
 const intervalLog = {};
 let id;
+
+const messageMaker = async (label) => {
+
+  let params = {
+    Message: label,
+    TopicArn: 'arn:aws:sns:us-east-1:680623495322:RepReserveExpire'
+  }
+
+  const messenger = new AWS.SNS({apiVersion: '2010-03-31'}).publish(params).promise();
+
+  const messageRep = await messenger.then((data)=>{
+    console.log(data)
+  }).catch((err)=> {
+    console.log(err)
+  })
+  return messageRep
+}
 
 //tracks labels
 const tracker = (label, countA) => {
@@ -24,7 +51,8 @@ const timer = (label, countVal) => {
     count--;
     tracker(label, count)
      if (count < 1) {
-       count = countVal
+       messageMaker(label);
+       clearInterval(id)
   };
 },1000)
   intervalTracker(label, id)

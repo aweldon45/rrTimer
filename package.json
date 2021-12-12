@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/aweldon45/rrTimer#readme",
   "dependencies": {
+    "aws-sdk": "^2.1046.0",
     "express": "^4.17.1"
   }
 }
