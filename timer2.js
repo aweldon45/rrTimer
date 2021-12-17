@@ -136,15 +136,8 @@ app.get(`/currentTime/:label`, (req,res)=> {
   res.flushHeaders(); // flush the headers to establish SSE with client
 
   let labelRequest = req.params.label;
-
-
-/*if (signal === 0) {
-  res.write('this timer is inactive')
-  res.end()
-} else {*/
     let y = setInterval(()=> {
-      res.write(`${JSON.stringify(labelLog[labelRequest])}\n\n`);
+      res.write(`data: ${JSON.stringify(labelLog[labelRequest])}\n\n`);
     },1000)
-  //}
 })
 app.listen(3000)
